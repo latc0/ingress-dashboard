@@ -31,9 +31,7 @@ type Receiver interface {
 	Set(ingresses []Ingress)
 }
 
-func WatchKubernetes(global context.Context, clientset kubernetes.Interface, receiver interface {
-	Set(ingresses []Ingress)
-}) {
+func WatchKubernetes(global context.Context, clientset kubernetes.Interface, receiver Receiver, fetchHostInfo bool) {
 	ctx, cancel := context.WithCancel(global)
 	defer cancel()
 
@@ -48,19 +46,21 @@ func WatchKubernetes(global context.Context, clientset kubernetes.Interface, rec
 		watcher.runWatcher(ctx, clientset)
 	}()
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		defer cancel()
-		watcher.runLogoFetcher(ctx)
-	}()
+	if fetchHostInfo {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			defer cancel()
+			watcher.runLogoFetcher(ctx)
+		}()
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		defer cancel()
-		watcher.runCertsInfoCheck(ctx)
-	}()
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			defer cancel()
+			watcher.runCertsInfoCheck(ctx)
+		}()
+	}
 	wg.Wait()
 }
 

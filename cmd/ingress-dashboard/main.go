@@ -35,7 +35,8 @@ type Config struct {
 	Auth          string `long:"auth" env:"AUTH" description:"Auth scheme" default:"none" choice:"none" choice:"oidc" choice:"basic"`
 	BasicUser     string `long:"basic-user" env:"BASIC_USER" description:"Basic Auth username"`
 	BasicPassword string `long:"basic-password" env:"BASIC_PASSWORD" description:"Basic Auth password"`
-	StaticSource  string `long:"static-source" env:"STATIC_SOURCE" description:"Location of static ingress definitions" `
+	StaticSource  string `long:"static-source" env:"STATIC_SOURCE" description:"Location of static ingress definitions"`
+	FetchHostInfo bool   `long:"fetch-host-info" env:"FETCH_HOST_INFO" description:"Whether to reach out to the host for TLS and logo information"`
 }
 
 func main() {
@@ -78,7 +79,7 @@ func run(cfg Config) error {
 
 	go func() {
 		defer cancel()
-		internal.WatchKubernetes(ctx, clientset, svc)
+		internal.WatchKubernetes(ctx, clientset, svc, cfg.FetchHostInfo)
 	}()
 
 	http.Handle("/", secured)
