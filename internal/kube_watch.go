@@ -250,8 +250,9 @@ func (kw *kubeWatcher) getRefs(ctx context.Context, ing *v12.Ingress, forceTLS b
 	}
 
 	var refs []Ref
+	baseURL := proto + ing.Status.LoadBalancer.Ingress[0].Hostname
 	for _, rule := range ing.Spec.Rules {
-		baseURL := proto + rule.Host
+		// baseURL := proto + rule.Host
 		if rule.HTTP != nil {
 			for _, path := range rule.HTTP.Paths {
 				var ref = Ref{
