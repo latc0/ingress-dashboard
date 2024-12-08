@@ -76,7 +76,7 @@ func findIcons(doc *html.Node) string {
 
 	var links = make(map[string]string)
 	for child := head.FirstChild; child != nil; child = child.NextSibling {
-		if !(child.Type == html.ElementNode && child.Data == "link") {
+		if child.Type == html.ElementNode && child.Data == "link" {
 			var key string
 			var value string
 			for _, attr := range child.Attr {
