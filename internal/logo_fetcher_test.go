@@ -17,7 +17,7 @@ func TestFindIcons(t *testing.T) {
 		t.Fail()
 	}
 	logo := findIcons(doc)
-	if logo != "public/img/apple-touch-icon.png" {
+	if logo != "/public/img/apple-touch-icon.png" {
 		t.Fail()
 	}
 }
