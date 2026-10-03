@@ -79,61 +79,11 @@
                             <a href="{{$ref.URL}}" target="_blank">
                                 {{- $ref.URL -}}
                             </a>
-                            &nbsp;—&nbsp;{{- if $ref.Pods -}}
-                            served by {{$ref.Pods}} host{{if gt $ref.Pods 1}}s{{end}}
-                        {{- else -}}
-                            <span class="warn">no hosts!</span>
-                        {{- end -}}
                         </li>
                     {{end}}
                 </ul>
             </div>
         </form>
-
-        <!-- TLS -->
-        {{if $.Ingress.TLS}}
-            <form class="card">
-                {{if $.Ingress.Cert.Expiration.IsZero}}
-                    <span title="TLS enabled but status not yet known">TLS status unknown</span>
-                {{else}}
-                    <p>
-                        <small>issuer</small><br/>
-                        {{$.Ingress.Cert.Issuer}}
-                    </p>
-                    <p>
-                        <small>subject(s)</small><br/>
-                        {{range $i, $subject := $.Ingress.Cert.Domains}}
-                            {{if $i}},{{end}}
-                            {{$subject}}
-                        {{end}}
-                    </p>
-                    <p>
-                        <small>certificate expiration</small><br/>
-                        {{$.Ingress.Cert.Expiration}}
-                    </p>
-                    {{if not $.Ingress.IsTLSExpired}}
-                        <p>
-                            <small>expires after</small><br/>
-                            {{$.Ingress.WhenTLSExpires}}
-                        </p>
-                    {{end}}
-                    {{if $.Ingress.IsTLSExpired}}
-                        <span class="warn"
-                              title="TLS certificate expired at {{$.Ingress.Cert.Expiration}}">❌ TLS expired</span>
-                    {{else if $.Ingress.IsTLSSoonExpire}}
-                        Expires after {{$.Ingress.WhenTLSExpires}}
-                        <span class="danger" title="TLS certificate will expire after {{$.Ingress.WhenTLSExpires}}">🔔 TLS soon expire</span>
-                    {{else}}
-                        <span class="success"
-                              title="TLS enabled, valid until {{$.Ingress.Cert.Expiration}}">🛡 TLS enabled️</span>
-                    {{end}}
-                {{end}}
-            </form>
-        {{else}}
-            <form class="card">
-                <span class="warn" title="Insecure connections">🔓 TLS not enabled</span>
-            </form>
-        {{end}}
     </div>
 </div>
 </body>
